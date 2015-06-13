@@ -35,15 +35,14 @@ public class TeamRecyclerAdapter extends RecyclerView.Adapter<TeamRecyclerAdapte
     public TeamsViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
     {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerlist_item, viewGroup, false);
-        TeamsViewHolder viewHolder = new TeamsViewHolder(view);
-        return viewHolder;
+        return new TeamsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(TeamsViewHolder versionViewHolder, int i) {
-            versionViewHolder.title.setText(teamsModels.get(i).GetTeamName());
-            versionViewHolder.subTitle.setText(teamsModels.get(i).GetTeamLocation());
-            versionViewHolder.image.setImageDrawable(context.getDrawable(teamsModels.get(i).GetPictureID()));
+    public void onBindViewHolder(TeamsViewHolder teamsViewHolder, int i) {
+             teamsViewHolder.title.setText(teamsModels.get(i).GetTeamName());
+             teamsViewHolder.subTitle.setText(teamsModels.get(i).GetTeamLocation());
+             teamsViewHolder.image.setImageDrawable(context.getDrawable(teamsModels.get(i).GetPictureID()));
     }
 
     @Override
@@ -73,12 +72,12 @@ public class TeamRecyclerAdapter extends RecyclerView.Adapter<TeamRecyclerAdapte
         @Override
         public void onClick(View v)
         {
-            //clickListener.onItemClick(v, getAdapterPosition());
+            clickListener.onItemClick(v, getAdapterPosition());
         }
 
     }
     public interface OnItemClickListener {
-        public void onItemClick(View view, int position);
+        void onItemClick(View view, int position);
     }
 
     public void SetOnItemClickListener(final OnItemClickListener itemClickListener) {

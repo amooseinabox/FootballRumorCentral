@@ -1,5 +1,6 @@
 package com.jonphilo.android.footballrumorcentral;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -11,7 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
+import android.view.View;
+import android.widget.Toast;
 
 import com.jonphilo.android.footballrumorcentral.adapters.TeamRecyclerAdapter;
 import com.jonphilo.android.footballrumorcentral.models.EnglandTeamsModel;
@@ -27,6 +29,7 @@ public class EnglandNewsFeeds extends AppCompatActivity {
     int mutedColor = R.attr.colorPrimary;
     TeamRecyclerAdapter teamRecyclerAdapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,8 +41,6 @@ public class EnglandNewsFeeds extends AppCompatActivity {
 
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("England");
-
-        ImageView header = (ImageView) findViewById(R.id.header);
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.thefa);
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener()
@@ -56,7 +57,7 @@ public class EnglandNewsFeeds extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        List<TeamModel> listData = new ArrayList<TeamModel>();
+        final List<TeamModel> listData = new ArrayList<>();
         for(int i = 0; i < EnglandTeamsModel.data.length; i++)
         {
             listData.add(EnglandTeamsModel.data[i]);
@@ -66,6 +67,18 @@ public class EnglandNewsFeeds extends AppCompatActivity {
         {
             teamRecyclerAdapter = new TeamRecyclerAdapter(getApplicationContext(), listData);
             recyclerView.setAdapter(teamRecyclerAdapter);
+            final TeamRecyclerAdapter.OnItemClickListener onClickListener = new TeamRecyclerAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View v, int i) {
+                    int itemPosition = recyclerView.getChildAdapterPosition(v);
+                    TeamModel teamModel = listData.get(itemPosition);
+                    Intent intent = new Intent(getApplicationContext(), EnglandTeamNewsFeed.class);
+                    intent.putExtra("teamObj", teamModel);
+                    startActivity(intent);
+                }
+            };
+            teamRecyclerAdapter.SetOnItemClickListener(onClickListener);
+
         }
         else
         {

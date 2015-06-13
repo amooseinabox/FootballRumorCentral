@@ -1,9 +1,11 @@
 package com.jonphilo.android.footballrumorcentral.models;
 
+import java.io.Serializable;
+
 /**
  * Created by jonathanphilo on 6/10/15.
  */
-public class TeamModel {
+public class TeamModel implements Serializable {
     private String _teamName;
     private String _location;
     private int _pictureID;

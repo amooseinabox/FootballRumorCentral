@@ -14,7 +14,6 @@ public class EnglandTeamsModel {
                     new TeamModel("Tottenham Hotspur F.C.", "London, England", R.drawable.thfc),
                     new TeamModel("Southampton F.C.", "Southampton, England", R.drawable.soton )
             };
-
     EnglandTeamsModel(String name)
     {
         this.name = name;

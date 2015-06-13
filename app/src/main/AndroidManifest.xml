@@ -24,6 +24,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.jonphilo.android.footballrumorcentral.HomeActivity" />
         </activity>
+        <activity
+            android:name=".EnglandTeamNewsFeed"
+            android:label="@string/title_activity_england_team_news_feed"
+            android:parentActivityName=".EnglandNewsFeeds" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jonphilo.android.footballrumorcentral.EnglandNewsFeeds" />
+        </activity>
     </application>
 
 </manifest>
