@@ -1,6 +1,10 @@
 package com.jonphilo.android.footballrumorcentral.models;
 
+import com.jonphilo.android.footballrumorcentral.xml.RSSItem;
+
 import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * Created by jonathanphilo on 6/10/15.
@@ -10,11 +14,12 @@ public class TeamModel implements Serializable {
     private String _location;
     private int _pictureID;
 
-    public TeamModel(String name, String location, int id)
+    public TeamModel(String name, String location, int id, String[] rss)
     {
         _teamName = name;
         _location = location;
         _pictureID = id;
+        RSS = rss;
     }
 
     public String GetTeamName()
@@ -45,5 +50,9 @@ public class TeamModel implements Serializable {
     {
         _pictureID = id;
     }
+
+    public String[] RSS;
+
+    public ArrayList<RSSItem> RSSItems = new ArrayList();
 
 }

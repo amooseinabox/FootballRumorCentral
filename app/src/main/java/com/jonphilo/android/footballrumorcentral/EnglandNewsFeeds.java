@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,8 +19,11 @@ import android.widget.Toast;
 import com.jonphilo.android.footballrumorcentral.adapters.TeamRecyclerAdapter;
 import com.jonphilo.android.footballrumorcentral.models.EnglandTeamsModel;
 import com.jonphilo.android.footballrumorcentral.models.TeamModel;
+import com.jonphilo.android.footballrumorcentral.xml.HandleXML;
+import com.jonphilo.android.footballrumorcentral.xml.RSSItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -72,6 +76,20 @@ public class EnglandNewsFeeds extends AppCompatActivity {
                 public void onItemClick(View v, int i) {
                     int itemPosition = recyclerView.getChildAdapterPosition(v);
                     TeamModel teamModel = listData.get(itemPosition);
+                    for(String rssItem : teamModel.RSS)
+                    {
+                        HandleXML xmlHandler = new HandleXML(rssItem);
+                        xmlHandler.fetchXML();
+                        while(xmlHandler.parsingComplete)
+                        {
+                            Snackbar.make(recyclerView, "Loading", Snackbar.LENGTH_SHORT);
+                        }
+                        for(RSSItem item : xmlHandler.items)
+                        {
+                            teamModel.RSSItems.add(item);
+                        }
+                    }
+                    Collections.sort(teamModel.RSSItems);
                     Intent intent = new Intent(getApplicationContext(), EnglandTeamNewsFeed.class);
                     intent.putExtra("teamObj", teamModel);
                     startActivity(intent);
@@ -89,7 +107,6 @@ public class EnglandNewsFeeds extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_england_news_feeds, menu);
         return true;
     }
 

@@ -14,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.jonphilo.android.footballrumorcentral.xml.HandleXML;
+
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -22,7 +24,6 @@ public class HomeActivity extends AppCompatActivity {
     NavigationView mNavigationView;
     FrameLayout mContentFrame;
     Intent intent;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +52,9 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+//
+//        int i = 0;
+//        i++;
     }
 
     @Override
