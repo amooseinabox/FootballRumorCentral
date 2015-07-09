@@ -19,11 +19,12 @@ public class EnglandTeamsModel {
                             new String[]{
                                     "http://hotspurrelated.co.uk/archive/feed/",
                                     "https://dailyhotspur.wordpress.com/feed/"
-                            }),
-                    new TeamModel("Southampton F.C.", "Southampton, England", R.drawable.soton,
-                            new String[]{
-
                             })
+//                    new TeamModel("Southampton F.C.", "Southampton, England", R.drawable.soton,
+//                            new String[]{
+//
+//
+//                            })
             };
     EnglandTeamsModel(String name)
     {

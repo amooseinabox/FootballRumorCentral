@@ -3,29 +3,28 @@ package com.jonphilo.android.footballrumorcentral;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
+import android.os.AsyncTask;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.jonphilo.android.footballrumorcentral.adapters.RSSRecyclerAdapter;
-import com.jonphilo.android.footballrumorcentral.adapters.TeamRecyclerAdapter;
-import com.jonphilo.android.footballrumorcentral.models.EnglandTeamsModel;
 import com.jonphilo.android.footballrumorcentral.models.TeamModel;
 import com.jonphilo.android.footballrumorcentral.xml.HandleXML;
 import com.jonphilo.android.footballrumorcentral.xml.RSSItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -66,35 +65,9 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        final List<RSSItem> listData = new ArrayList<>();
-
-        for(RSSItem rss : teamModel.RSSItems)
-        {
-            listData.add(rss);
-        }
-
-        if(rssRecyclerAdapter == null)
-        {
-            rssRecyclerAdapter = new RSSRecyclerAdapter(getApplicationContext(), listData);
-            recyclerView.setAdapter(rssRecyclerAdapter);
-            final RSSRecyclerAdapter.OnItemClickListener onClickListener = new RSSRecyclerAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(View v, int i) {
-//                    int itemPosition = recyclerView.getChildAdapterPosition(v);
-//                    R teamModel = listData.get(itemPosition);
-//                    Intent intent = new Intent(getApplicationContext(), EnglandTeamNewsFeed.class);
-//                    intent.putExtra("teamObj", teamModel);
-//                    startActivity(intent);
-                }
-            };
-            rssRecyclerAdapter.SetOnItemClickListener(onClickListener);
-
-        }
-        else
-        {
-            rssRecyclerAdapter.notifyDataSetChanged();
-        }
-
+        recyclerView.setAdapter(rssRecyclerAdapter);
+        GetRSSDataTask task = new GetRSSDataTask();
+        task.execute(teamModel.RSS);
     }
 
     @Override
@@ -117,5 +90,64 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
 //        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class GetRSSDataTask extends AsyncTask<String[], Void, List<RSSItem>>{
+        @Override
+        protected List<RSSItem> doInBackground(String[]... urls)
+        {
+            List<RSSItem> items = new ArrayList<>();
+            try{
+                for(String rssItem : urls[0])
+                {
+                    HandleXML xmlHandler = new HandleXML(rssItem);
+                    xmlHandler.fetchXML();
+                    while(xmlHandler.parsingComplete)
+                    {
+                        Snackbar.make(recyclerView, "Loading", Snackbar.LENGTH_SHORT);
+                    }
+                    for(RSSItem item : xmlHandler.items)
+                    {
+                       items.add(item);
+                    }
+                }
+                return items;
+            }
+            catch(Exception e)
+            {
+                Log.e("EnglandTeamNewsError", e.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected  void onPostExecute(List<RSSItem> result){
+            List<RSSItem> listData = result;
+            Collections.sort(listData);
+
+
+//            if(rssRecyclerAdapter == null)
+//            {
+                rssRecyclerAdapter = new RSSRecyclerAdapter(getApplicationContext(), listData);
+                recyclerView.setAdapter(rssRecyclerAdapter);
+                final RSSRecyclerAdapter.OnItemClickListener onClickListener = new RSSRecyclerAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View v, int i) {
+//                    int itemPosition = recyclerView.getChildAdapterPosition(v);
+//                    R teamModel = listData.get(itemPosition);
+//                    Intent intent = new Intent(getApplicationContext(), EnglandTeamNewsFeed.class);
+//                    intent.putExtra("teamObj", teamModel);
+//                    startActivity(intent);
+                    }
+                };
+                rssRecyclerAdapter.SetOnItemClickListener(onClickListener);
+
+//            }
+//            else
+//            {
+//                rssRecyclerAdapter.notifyDataSetChanged();
+//            }
+
+        }
     }
 }

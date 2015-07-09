@@ -76,20 +76,7 @@ public class EnglandNewsFeeds extends AppCompatActivity {
                 public void onItemClick(View v, int i) {
                     int itemPosition = recyclerView.getChildAdapterPosition(v);
                     TeamModel teamModel = listData.get(itemPosition);
-                    for(String rssItem : teamModel.RSS)
-                    {
-                        HandleXML xmlHandler = new HandleXML(rssItem);
-                        xmlHandler.fetchXML();
-                        while(xmlHandler.parsingComplete)
-                        {
-                            Snackbar.make(recyclerView, "Loading", Snackbar.LENGTH_SHORT);
-                        }
-                        for(RSSItem item : xmlHandler.items)
-                        {
-                            teamModel.RSSItems.add(item);
-                        }
-                    }
-                    Collections.sort(teamModel.RSSItems);
+
                     Intent intent = new Intent(getApplicationContext(), EnglandTeamNewsFeed.class);
                     intent.putExtra("teamObj", teamModel);
                     startActivity(intent);
