@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.jonphilo.android.footballrumorcentral.adapters.TeamRecyclerAdapter;
 import com.jonphilo.android.footballrumorcentral.models.EnglandTeamsModel;
 import com.jonphilo.android.footballrumorcentral.models.TeamModel;
@@ -47,15 +49,17 @@ public class EnglandNewsFeeds extends AppCompatActivity {
         collapsingToolbar.setTitle("England");
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.thefa);
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener()
-        {
+        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
-            public void onGenerated(Palette palette)
-            {
+            public void onGenerated(Palette palette) {
                 mutedColor = palette.getMutedColor(R.attr.colorPrimary);
                 collapsingToolbar.setContentScrimColor(mutedColor);
             }
         });
+
+        AdView mAdView = (AdView) findViewById(R.id.adView_england);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         recyclerView = (RecyclerView) findViewById(R.id.scrollableview);
         recyclerView.setHasFixedSize(true);

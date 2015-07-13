@@ -5,10 +5,10 @@
             android:id="@+id/nav_england"
             android:icon="@drawable/ic_action_action_view_list"
             android:title="England" />
-        <item
-            android:id="@+id/nav_spain"
-            android:icon="@drawable/ic_action_action_view_list"
-            android:title="Spain" />
+        <!--<item-->
+            <!--android:id="@+id/nav_spain"-->
+            <!--android:icon="@drawable/ic_action_action_view_list"-->
+            <!--android:title="Spain" />-->
     </group>
 
 

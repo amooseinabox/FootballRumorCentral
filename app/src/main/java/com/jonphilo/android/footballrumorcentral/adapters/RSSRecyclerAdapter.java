@@ -33,7 +33,7 @@ public class RSSRecyclerAdapter extends RecyclerView.Adapter<RSSRecyclerAdapter.
     @Override
     public RSSViewHolder onCreateViewHolder(ViewGroup viewGroup, int i)
     {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recyclerlist_item, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.news_list_item, viewGroup, false);
         return new RSSViewHolder(view);
     }
 
@@ -60,9 +60,9 @@ public class RSSRecyclerAdapter extends RecyclerView.Adapter<RSSRecyclerAdapter.
         {
             super(itemView);
 
-            cardItemLayout = (CardView) itemView.findViewById(R.id.cardlist_item);
-            title = (TextView) itemView.findViewById(R.id.listitem_name);
-            subTitle = (TextView) itemView.findViewById(R.id.listitem_subname);
+            cardItemLayout = (CardView) itemView.findViewById(R.id.news_card_list_item);
+            title = (TextView) itemView.findViewById(R.id.news_item_name);
+            subTitle = (TextView) itemView.findViewById(R.id.news_item_sub_name);
 //            image = (ImageView) itemView.findViewById(R.id.list_item_pic);
             itemView.setOnClickListener(this);
 

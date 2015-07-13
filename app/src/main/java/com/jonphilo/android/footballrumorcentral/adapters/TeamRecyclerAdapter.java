@@ -42,7 +42,7 @@ public class TeamRecyclerAdapter extends RecyclerView.Adapter<TeamRecyclerAdapte
     public void onBindViewHolder(TeamsViewHolder teamsViewHolder, int i) {
              teamsViewHolder.title.setText(teamsModels.get(i).GetTeamName());
              teamsViewHolder.subTitle.setText(teamsModels.get(i).GetTeamLocation());
-             teamsViewHolder.image.setImageDrawable(context.getDrawable(teamsModels.get(i).GetPictureID()));
+//             teamsViewHolder.image.setImageDrawable(context.getDrawable(teamsModels.get(i).GetPictureID()));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class TeamRecyclerAdapter extends RecyclerView.Adapter<TeamRecyclerAdapte
             cardItemLayout = (CardView) itemView.findViewById(R.id.cardlist_item);
             title = (TextView) itemView.findViewById(R.id.listitem_name);
             subTitle = (TextView) itemView.findViewById(R.id.listitem_subname);
-            image = (ImageView) itemView.findViewById(R.id.list_item_pic);
+//            image = (ImageView) itemView.findViewById(R.id.list_item_pic);
             itemView.setOnClickListener(this);
 
         }

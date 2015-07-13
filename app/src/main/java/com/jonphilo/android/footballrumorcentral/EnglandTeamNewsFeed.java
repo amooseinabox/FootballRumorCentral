@@ -3,6 +3,7 @@ package com.jonphilo.android.footballrumorcentral;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.Snackbar;
@@ -17,7 +18,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.jonphilo.android.footballrumorcentral.adapters.RSSRecyclerAdapter;
 import com.jonphilo.android.footballrumorcentral.models.TeamModel;
 import com.jonphilo.android.footballrumorcentral.xml.HandleXML;
@@ -34,6 +38,10 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
     RecyclerView recyclerView;
     int mutedColor = R.attr.colorPrimary;
     RSSRecyclerAdapter rssRecyclerAdapter;
+    List<RSSItem> listData = new ArrayList<>();
+    ProgressBar progressBar;
+    int numberOfStories;
+    int totalStories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +57,8 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+
         collapsingToolbar = (CollapsingToolbarLayout)findViewById(R.id.eng_team_collapsing_toolbar);
         collapsingToolbar.setTitle(teamModel.GetTeamName());
 
@@ -61,13 +71,26 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
             }
         });
 
+        AdView mAdView = (AdView) findViewById(R.id.adView_team);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         recyclerView = (RecyclerView) findViewById(R.id.eng_team_scrollableview);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(rssRecyclerAdapter);
-        GetRSSDataTask task = new GetRSSDataTask();
-        task.execute(teamModel.RSS);
+
+        numberOfStories = 0;
+        totalStories = teamModel.RSS.length;
+        for(String rss : teamModel.RSS)
+        {
+            GetRSSDataTask task = new GetRSSDataTask();
+            task.execute(rss);
+        }
+
+        progressBar.setVisibility(ProgressBar.VISIBLE);
+
     }
 
     @Override
@@ -92,13 +115,13 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class GetRSSDataTask extends AsyncTask<String[], Void, List<RSSItem>>{
+    private class GetRSSDataTask extends AsyncTask<String, Void, List<RSSItem>>{
         @Override
-        protected List<RSSItem> doInBackground(String[]... urls)
+        protected List<RSSItem> doInBackground(String... urls)
         {
             List<RSSItem> items = new ArrayList<>();
             try{
-                for(String rssItem : urls[0])
+                for(String rssItem : urls)
                 {
                     HandleXML xmlHandler = new HandleXML(rssItem);
                     xmlHandler.fetchXML();
@@ -122,31 +145,38 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
 
         @Override
         protected  void onPostExecute(List<RSSItem> result){
-            List<RSSItem> listData = result;
+            listData.addAll(result);
             Collections.sort(listData);
 
 
-//            if(rssRecyclerAdapter == null)
-//            {
+            if(rssRecyclerAdapter == null)
+            {
                 rssRecyclerAdapter = new RSSRecyclerAdapter(getApplicationContext(), listData);
                 recyclerView.setAdapter(rssRecyclerAdapter);
                 final RSSRecyclerAdapter.OnItemClickListener onClickListener = new RSSRecyclerAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View v, int i) {
-//                    int itemPosition = recyclerView.getChildAdapterPosition(v);
-//                    R teamModel = listData.get(itemPosition);
-//                    Intent intent = new Intent(getApplicationContext(), EnglandTeamNewsFeed.class);
-//                    intent.putExtra("teamObj", teamModel);
-//                    startActivity(intent);
+                    int itemPosition = recyclerView.getChildAdapterPosition(v);
+                    RSSItem rssItem = listData.get(itemPosition);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(rssItem.getLink()));
+                    startActivity(intent);
                     }
                 };
                 rssRecyclerAdapter.SetOnItemClickListener(onClickListener);
 
-//            }
-//            else
-//            {
-//                rssRecyclerAdapter.notifyDataSetChanged();
-//            }
+            }
+            else
+            {
+                rssRecyclerAdapter.notifyDataSetChanged();
+            }
+            numberOfStories++;
+            if(totalStories == numberOfStories)
+            {
+                progressBar.setVisibility(ProgressBar.INVISIBLE);
+                Collections.sort(listData);
+                rssRecyclerAdapter.notifyDataSetChanged();
+            }
 
         }
     }

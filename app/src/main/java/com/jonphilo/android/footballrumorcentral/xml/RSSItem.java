@@ -87,7 +87,7 @@ public class RSSItem implements Serializable, Comparable<RSSItem>
     @Override
     public int compareTo(RSSItem another) {
 
-        DateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+        DateFormat dateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss");
         try{
             Date thisDate = dateFormat.parse(this.getPubDate());
             Date anotherDate = dateFormat.parse(another.getPubDate());

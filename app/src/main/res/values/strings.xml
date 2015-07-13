@@ -5,4 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_england_news_feeds">England Rumor Central</string>
     <string name="title_activity_england_team_news_feed">England Team News</string>
+    <string name="home_banner_ad_unit_id">ca-app-pub-6148047482093698/4723002563</string>
+    <string name="england_bottom_banner_ad_unit_id">ca-app-pub-6148047482093698/6199735766</string>
+    <string name="team_bottom_banner_ad_unit_id">ca-app-pub-6148047482093698/7676468963</string>
 </resources>
