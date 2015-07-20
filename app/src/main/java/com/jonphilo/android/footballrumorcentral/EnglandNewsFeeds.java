@@ -34,6 +34,7 @@ public class EnglandNewsFeeds extends AppCompatActivity {
     RecyclerView recyclerView;
     int mutedColor = R.attr.colorPrimary;
     TeamRecyclerAdapter teamRecyclerAdapter;
+    Bitmap bitmap;
 
 
     @Override
@@ -48,7 +49,7 @@ public class EnglandNewsFeeds extends AppCompatActivity {
         collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle("England");
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.thefa);
+        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.thefa);
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
@@ -114,5 +115,13 @@ public class EnglandNewsFeeds extends AppCompatActivity {
 //        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(!bitmap.isRecycled())
+            bitmap.recycle();
     }
 }

@@ -42,6 +42,7 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
     ProgressBar progressBar;
     int numberOfStories;
     int totalStories;
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,7 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
         collapsingToolbar = (CollapsingToolbarLayout)findViewById(R.id.eng_team_collapsing_toolbar);
         collapsingToolbar.setTitle(teamModel.GetTeamName());
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), teamModel.GetPictureID());
+        bitmap = BitmapFactory.decodeResource(getResources(), teamModel.GetPictureID());
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
@@ -113,6 +114,13 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
 //        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(!bitmap.isRecycled())
+            bitmap.recycle();
     }
 
     private class GetRSSDataTask extends AsyncTask<String, Void, List<RSSItem>>{
