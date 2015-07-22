@@ -20,8 +20,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.jonphilo.android.footballrumorcentral.adapters.RSSRecyclerAdapter;
 import com.jonphilo.android.footballrumorcentral.models.MainRSSLists;
 import com.jonphilo.android.footballrumorcentral.xml.HandleXML;
@@ -73,9 +71,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);

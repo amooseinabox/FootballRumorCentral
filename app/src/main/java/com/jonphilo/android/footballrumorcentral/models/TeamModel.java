@@ -12,13 +12,13 @@ import java.util.ArrayList;
 public class TeamModel implements Serializable {
     private String _teamName;
     private String _location;
-    private int _pictureID;
+    private String _picture;
 
-    public TeamModel(String name, String location, int id, String[] rss)
+    public TeamModel(String name, String location, String filename, String[] rss)
     {
         _teamName = name;
         _location = location;
-        _pictureID = id;
+        _picture = filename;
         RSS = rss;
     }
 
@@ -41,14 +41,14 @@ public class TeamModel implements Serializable {
         _location = teamLocation;
     }
 
-    public int GetPictureID()
+    public String GetPicture()
     {
-        return _pictureID;
+        return _picture;
     }
 
-    public void SetPictureID(int id)
+    public void SetPicture(String _picture)
     {
-        _pictureID = id;
+        _picture = _picture;
     }
 
     public String[] RSS;

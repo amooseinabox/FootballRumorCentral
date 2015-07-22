@@ -1,8 +1,12 @@
 package com.jonphilo.android.footballrumorcentral;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -19,14 +23,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.jonphilo.android.footballrumorcentral.adapters.RSSRecyclerAdapter;
 import com.jonphilo.android.footballrumorcentral.models.TeamModel;
 import com.jonphilo.android.footballrumorcentral.xml.HandleXML;
 import com.jonphilo.android.footballrumorcentral.xml.RSSItem;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +48,6 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
     ProgressBar progressBar;
     int numberOfStories;
     int totalStories;
-    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +57,12 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
         TeamModel teamModel = (TeamModel) intent.getSerializableExtra("teamObj");
 
         final ImageView image = (ImageView) findViewById(R.id.eng_team_header);
-        image.setImageDrawable(getApplicationContext().getDrawable(teamModel.GetPictureID()));
+        try{
+            image.setImageDrawable(getAssetImage(getApplicationContext(), teamModel.GetPicture()));
+        }
+        catch (Exception e){
+            Toast.makeText(getApplicationContext(), "Something Went Wrong.", Toast.LENGTH_LONG);
+        }
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.eng_team_anim_toolbar);
         setSupportActionBar(toolbar);
@@ -63,18 +73,19 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
         collapsingToolbar = (CollapsingToolbarLayout)findViewById(R.id.eng_team_collapsing_toolbar);
         collapsingToolbar.setTitle(teamModel.GetTeamName());
 
-        bitmap = BitmapFactory.decodeResource(getResources(), teamModel.GetPictureID());
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-                mutedColor = palette.getMutedColor(R.attr.colorPrimary);
-                collapsingToolbar.setContentScrimColor(mutedColor);
-            }
-        });
-
-        AdView mAdView = (AdView) findViewById(R.id.adView_team);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        try{
+            Bitmap bitmap = getAssetBitmapImage(getApplicationContext(), teamModel.GetPicture());
+            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    mutedColor = palette.getMutedColor(R.attr.colorPrimary);
+                    collapsingToolbar.setContentScrimColor(mutedColor);
+                }
+            });
+        }
+        catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Something Went Wrong", Toast.LENGTH_LONG);
+        }
 
         recyclerView = (RecyclerView) findViewById(R.id.eng_team_scrollableview);
         recyclerView.setHasFixedSize(true);
@@ -116,11 +127,17 @@ public class EnglandTeamNewsFeed extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(!bitmap.isRecycled())
-            bitmap.recycle();
+    public static Drawable getAssetImage(Context context, String filename) throws IOException {
+        AssetManager assets = context.getResources().getAssets();
+        InputStream buffer = new BufferedInputStream((assets.open("drawable/" + filename + ".png")));
+        Bitmap bitmap = BitmapFactory.decodeStream(buffer);
+        return new BitmapDrawable(context.getResources(), bitmap);
+    }
+    public static Bitmap getAssetBitmapImage(Context context, String filename) throws IOException {
+        AssetManager assets = context.getResources().getAssets();
+        InputStream buffer = new BufferedInputStream((assets.open("drawable/" + filename + ".png")));
+        Bitmap bitmap = BitmapFactory.decodeStream(buffer);
+        return bitmap;
     }
 
     private class GetRSSDataTask extends AsyncTask<String, Void, List<RSSItem>>{
